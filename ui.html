@@ -1,0 +1,77 @@
+<link rel="stylesheet" href="https://static.figma.com/api/figma-extension-api-0.0.1.css">
+<h2>Generator wykresów</h2>
+<p>
+    Wartości: <input id="textbox" placeholder="1, 2, 3, ..." value="1, 2, 3, 4">
+</p>
+<b id="errors"></b>
+<p><button id='PieButton'>Wykres kołowy</button></p>
+<p><button id='BarButton'>Wykres słupkowy</button></p>
+<p><button id='CircleButton'>Wykres procentowy</button></p>
+
+<script>
+  document.getElementById('PieButton').onclick = () => {
+    const text = document.querySelector('#textbox').value;
+
+    let numbers = text.split(',').map(x => +x)
+    if (numbers.length < 2) {
+      showError('Error: Musi mieć minimum 2 wartości');
+      return
+    }
+    if (numbers.some(x => isNaN(x))) {
+      showError('Error: Wszystkie wartości muszą być liczbami');
+      return
+    }
+
+    parent.postMessage({ pluginMessage: { type: 'pie', numbers } }, '*')
+  }
+
+  document.getElementById('BarButton').onclick = () => {
+    const text = document.querySelector('#textbox').value;
+    let numbers = text.split(',').map(x => +x)
+
+    if (numbers.length < 2) {
+      showError('Error: Musi mieć minimum 2 wartości');
+      return
+    }
+    if (numbers.some(x => isNaN(x))) {
+      showError('Error: Wszystkie wartości muszą być liczbami');
+      return
+    }
+
+    parent.postMessage({ pluginMessage: { type: 'bar', numbers } }, '*')
+  }
+
+  document.getElementById('CircleButton').onclick = () => {
+    const text = document.querySelector('#textbox').value;
+    let numbers = text.split(',').map(x => +x)
+
+    if (numbers.length < 1) {
+      showError('Error: Musi mieć minimum 1 wartość');
+      return
+    }
+
+    if (numbers.length > 4) {
+      showError('Error: Może mieć maximum 4 wartości');
+      return
+    }
+    let numbers2 = (numbers).map(x => Math.max(0, x));
+    const total = numbers2.reduce((a, b) => a + b, 0);
+
+    if (total > 100) {
+      showError('Error: Suma wartości % musi być mniejsza niż 100');
+      return
+    }
+
+    if (numbers.some(x => isNaN(x))) {
+      showError('Error: Wszystkie wartości muszą być liczbami');
+      return
+    }
+
+    parent.postMessage({ pluginMessage: { type: 'circle', numbers } }, '*')
+  }
+
+  showError = errorMessage => {
+    document.querySelector('#errors').textContent = errorMessage
+  }
+  
+</script>

@@ -1,0 +1,7 @@
+{
+  "name": "Data plugin",
+  "id": "970662953915920695",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html"
+}
