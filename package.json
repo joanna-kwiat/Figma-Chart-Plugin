@@ -1,7 +1,7 @@
 {
   "name": "Data-plugin_JoannaKwiatkowska",
   "version": "1.0.0",
-  "description": "Your Figma plugin",
+  "description": "Bumi Chart Generator",
   "main": "code.js",
   "scripts": {
     "build": "tsc -p tsconfig.json"

@@ -7,7 +7,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-figma.showUI(__html__);
+figma.showUI(__html__, {
+    height: 450,
+    width: 650
+});
 figma.ui.onmessage = (numbers) => __awaiter(this, void 0, void 0, function* () {
     yield figma.loadFontAsync({ family: "Roboto", style: "Regular" });
     //funkcja potrzebna do zmiany kolorów elementów
@@ -57,7 +60,7 @@ figma.ui.onmessage = (numbers) => __awaiter(this, void 0, void 0, function* () {
             frame.appendChild(ellipse);
             ellipse.resizeWithoutConstraints(width, height);
             ellipse.fills = [{ type: 'SOLID', color: { r: c, g: c, b: c } }];
-            ellipse.constraints = { horizontal: 'STRETCH', vertical: 'STRETCH' };
+            ellipse.constraints = { horizontal: 'SCALE', vertical: 'SCALE' };
             ellipse.x = widthPlus;
             ellipse.arcData = {
                 startingAngle: (start / total - 0.25) * 2 * Math.PI,
@@ -76,21 +79,21 @@ figma.ui.onmessage = (numbers) => __awaiter(this, void 0, void 0, function* () {
         fills[0].color.b = 0.82;
         ellipse_ColorBurn.fills = fills;
         ellipse_ColorBurn.x = widthPlus;
-        ellipse_ColorBurn.constraints = { horizontal: 'STRETCH', vertical: 'STRETCH' };
+        ellipse_ColorBurn.constraints = { horizontal: 'SCALE', vertical: 'SCALE' };
         ellipse_ColorBurn.blendMode = "OVERLAY";
         let start2 = 0;
         let heightVal = height;
         //legenda
-        for (const num of numbers2) {
+        for (var i = 0; i < numbers2.length; i++) {
             const c = Math.sqrt(start2 / total);
-            const posY = heightVal - 20 * num;
+            const posY = heightVal - 20 * i;
             const ellipseLabel = figma.createEllipse();
             frame.appendChild(ellipseLabel);
             ellipseLabel.resizeWithoutConstraints(15, 15);
             ellipseLabel.fills = [{ type: 'SOLID', color: { r: c, g: c, b: c } }];
-            ellipseLabel.constraints = { horizontal: 'STRETCH', vertical: 'STRETCH' };
+            ellipseLabel.constraints = { horizontal: 'MIN', vertical: 'MAX' };
             ellipseLabel.x = widthPlus / 2;
-            ellipseLabel.y = posY;
+            ellipseLabel.y = posY - 15;
             const ellipse_ColorBurn2 = figma.createEllipse();
             frame.appendChild(ellipse_ColorBurn2);
             ellipse_ColorBurn2.resizeWithoutConstraints(15, 15);
@@ -100,21 +103,21 @@ figma.ui.onmessage = (numbers) => __awaiter(this, void 0, void 0, function* () {
             fills[0].color.b = 0.82;
             ellipse_ColorBurn2.fills = fills;
             ellipse_ColorBurn2.x = widthPlus / 2;
-            ellipse_ColorBurn2.y = posY;
-            ellipse_ColorBurn2.constraints = { horizontal: 'STRETCH', vertical: 'STRETCH' };
+            ellipse_ColorBurn2.y = posY - 15;
+            ellipse_ColorBurn2.constraints = { horizontal: 'MIN', vertical: 'MAX' };
             ellipse_ColorBurn2.blendMode = "OVERLAY";
             const label = figma.createText();
             frame.appendChild(label);
             label.x = 5;
-            label.y = posY - 5;
+            label.y = posY - 5 - 15;
             label.resizeWithoutConstraints(40, 20);
             label.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 } }];
-            label.characters = (num / total * 100).toFixed(1) + "%";
+            label.characters = (numbers2[i] / total * 100).toFixed(1) + "%";
             label.fontSize = 12;
             label.textAlignHorizontal = 'CENTER';
             label.textAlignVertical = 'BOTTOM';
-            label.constraints = { horizontal: 'STRETCH', vertical: 'STRETCH' };
-            start2 += num;
+            label.constraints = { horizontal: 'MIN', vertical: 'MAX' };
+            start2 += numbers2[i];
         }
         figma.closePlugin();
     }
@@ -148,7 +151,7 @@ figma.ui.onmessage = (numbers) => __awaiter(this, void 0, void 0, function* () {
             column.resizeWithoutConstraints(25, bottom - top);
             column.fills = [{ type: 'SOLID', color: { r: 0.28, g: 0.3, b: 0.83 } }];
             column.opacity = 0.4;
-            column.constraints = { horizontal: 'STRETCH', vertical: 'STRETCH' };
+            column.constraints = { horizontal: 'SCALE', vertical: 'SCALE' };
             //dni tygodnia
             var weekDay = ['P', 'W', 'Ś', 'C', 'P', 'S', 'N'];
             const label = figma.createText();
@@ -161,20 +164,39 @@ figma.ui.onmessage = (numbers) => __awaiter(this, void 0, void 0, function* () {
             label.fontSize = 12;
             label.textAlignHorizontal = 'CENTER';
             label.textAlignVertical = 'BOTTOM';
-            label.constraints = { horizontal: 'STRETCH', vertical: 'STRETCH' };
+            label.constraints = { horizontal: 'SCALE', vertical: 'SCALE' };
             //podpis wartości
             const labelUp = figma.createText();
             frame.appendChild(labelUp);
             labelUp.x = left;
             labelUp.y = top - 15;
             labelUp.resizeWithoutConstraints(25, 15);
-            labelUp.fills = [{ type: 'SOLID', color: { r: 0.8, g: 0.8, b: 0.8 } }];
+            labelUp.fills = [{ type: 'SOLID', color: { r: 0.6, g: 0.6, b: 0.6 } }];
             labelUp.characters = num.toString();
             labelUp.fontSize = 12;
             labelUp.textAlignHorizontal = 'CENTER';
             labelUp.textAlignVertical = 'BOTTOM';
-            labelUp.constraints = { horizontal: 'STRETCH', vertical: 'STRETCH' };
+            labelUp.constraints = { horizontal: 'SCALE', vertical: 'SCALE' };
         }
+        const caption = figma.createText();
+        frame.appendChild(caption);
+        caption.y = 155;
+        caption.resizeWithoutConstraints(80, 20);
+        caption.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 } }];
+        caption.characters = "Caption";
+        caption.fontSize = 12;
+        caption.textAlignHorizontal = 'LEFT';
+        caption.textAlignVertical = 'BOTTOM';
+        caption.constraints = { horizontal: "MIN", vertical: 'MAX' };
+        const legend = figma.createEllipse();
+        frame.appendChild(legend);
+        var legendHeight = 12;
+        legend.resizeWithoutConstraints(legendHeight, legendHeight);
+        legend.fills = [{ type: 'SOLID', color: { r: 0.28, g: 0.3, b: 0.83 } }];
+        legend.opacity = 0.4;
+        legend.y = 155 - legendHeight;
+        legend.arcData = { startingAngle: 0, endingAngle: 2 * Math.PI, innerRadius: 0 };
+        legend.constraints = { horizontal: 'MIN', vertical: 'MAX' };
         figma.closePlugin();
     }
     //////////////////////////////////////////////////////////////////
@@ -198,7 +220,7 @@ figma.ui.onmessage = (numbers) => __awaiter(this, void 0, void 0, function* () {
         arc.resizeWithoutConstraints(width, height);
         arc.arcData = { startingAngle: 0, endingAngle: 2 * Math.PI, innerRadius: 0.81 };
         //tworzenie elementów grafu kołowego
-        for (const num of numbers2) {
+        for (const num of numbers2) { //0.2, 0.4...
             const c = Math.sqrt(start / total);
             const ellipse = figma.createEllipse();
             frame.appendChild(ellipse);
@@ -233,6 +255,57 @@ figma.ui.onmessage = (numbers) => __awaiter(this, void 0, void 0, function* () {
         label.textAlignHorizontal = 'CENTER';
         label.textAlignVertical = 'CENTER';
         label.constraints = { horizontal: 'STRETCH', vertical: 'STRETCH' };
+        figma.closePlugin();
+    }
+    //////////////////////////////////////////////////////////////////
+    //TIME GRAPH
+    //////////////////////////////////////////////////////////////////
+    if (numbers.type === 'time') {
+        let numbers2 = (numbers.numbers).map(x => Math.max(0, x)); //redukuje liczby ujemne
+        let colorList = [0.86, 0.86, 0.87, /**/ 0.86, 0.86, 0.87, /**/ 0.86, 0.86, 0.87, /**/ 0.65, 0.66, 0.92, /**/ 0.28, 0.30, 0.83, /**/ 0.11, 0.13, 0.22]; //R,G,B, R,G,B...
+        const width = 240 + (numbers2[0] - 1) * 2;
+        const height = 110 + (numbers2[1] - 1) * 2;
+        const plusWidth = 50;
+        const plusHeight = 25;
+        const frame = figma.createFrame();
+        figma.currentPage.appendChild(frame);
+        frame.resizeWithoutConstraints(width + plusWidth, height + plusHeight);
+        const columnWidth = 240 / numbers2[0];
+        const columnHeight = 110 / numbers2[1];
+        for (var i = 0; i < numbers2[0]; i++) { //0, 1, 2, ... , x
+            for (var j = 0; j < numbers2[1]; j++) { //0, 1, ... , y
+                const column = figma.createRectangle();
+                frame.appendChild(column);
+                column.x = plusWidth + i * columnWidth + 2 * i;
+                column.y = j * columnHeight + 2 * j;
+                column.resizeWithoutConstraints(columnWidth, columnHeight);
+                var x = Math.floor(Math.random() * 6);
+                column.fills = [{ type: 'SOLID', color: { r: colorList[3 * x], g: colorList[3 * x + 1], b: colorList[3 * x + 2] } }];
+                column.cornerRadius = 2;
+                column.constraints = { horizontal: 'SCALE', vertical: "SCALE" };
+            }
+        }
+        for (var j = 0; j < numbers2[1]; j++) { //0, 1, ... , y
+            const label = figma.createRectangle();
+            frame.appendChild(label);
+            label.resizeWithoutConstraints(columnHeight * 0.8, columnHeight * 0.8);
+            label.x = 0;
+            label.y = j * columnHeight + 2 * j + (columnHeight - columnHeight * 0.8) / 2;
+            label.fills = [{ type: 'SOLID', color: { r: colorList[3], g: colorList[4], b: colorList[5] } }];
+            label.cornerRadius = 0.3 * columnHeight;
+            label.constraints = { horizontal: 'SCALE', vertical: "SCALE" };
+        }
+        for (var j = 0; j < numbers2[0]; j++) { //0, 1, ... , y
+            const label = figma.createText();
+            frame.appendChild(label);
+            label.resizeWithoutConstraints(18, 15);
+            label.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 } }];
+            label.characters = (j * 2).toString();
+            label.textAlignHorizontal = 'CENTER';
+            label.fontSize = 13;
+            label.x = plusWidth - 9 + j * columnWidth + 2 * j;
+            label.y = height + 7;
+        }
         figma.closePlugin();
     }
 });

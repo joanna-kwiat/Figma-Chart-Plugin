@@ -1,12 +1,39 @@
 <link rel="stylesheet" href="https://static.figma.com/api/figma-extension-api-0.0.1.css">
-<h2>Generator wykresów</h2>
+<style>
+  body {
+    background-color: #1C2039;
+    color: #F6F7F9;
+    margin: 37;
+  }
+
+  button {
+    float: left;
+    font-size: 20px;
+    color: #F6F7F9;
+    background-color: #383C59;
+    width: 280px;
+    height: 80px;
+    margin-top: 15px;
+    margin-right: 15px;
+    border: none;
+    border-radius: 10px;
+    max-width: 300px;
+  }
+
+  #BarButton, #TimeButton{
+    margin-right: 0;
+  }
+
+</style>
+<img src="./Logo.svg" alt="x">
 <p>
     Wartości: <input id="textbox" placeholder="1, 2, 3, ..." value="1, 2, 3, 4">
 </p>
 <b id="errors"></b>
-<p><button id='PieButton'>Wykres kołowy</button></p>
-<p><button id='BarButton'>Wykres słupkowy</button></p>
-<p><button id='CircleButton'>Wykres procentowy</button></p>
+<button id='PieButton'>Wykres kołowy</button>
+<button id='BarButton'>Wykres słupkowy</button>
+<button id='CircleButton'>Wykres kołowy procentowy</button>
+<button id='TimeButton'>Wykres natężenia czasu</button>
 
 <script>
   document.getElementById('PieButton').onclick = () => {
@@ -69,6 +96,24 @@
 
     parent.postMessage({ pluginMessage: { type: 'circle', numbers } }, '*')
   }
+
+  document.getElementById('TimeButton').onclick = () => {
+    const text = document.querySelector('#textbox').value;
+    let numbers = text.split(',').map(x => +x)
+
+    if (numbers.length != 2) {
+      showError('Error: Musi mieć 2 wartości');
+      return
+    }
+
+    if (numbers.some(x => isNaN(x))) {
+      showError('Error: Wszystkie wartości muszą być liczbami');
+      return
+    }
+
+    parent.postMessage({ pluginMessage: { type: 'time', numbers } }, '*')
+  }
+
 
   showError = errorMessage => {
     document.querySelector('#errors').textContent = errorMessage
