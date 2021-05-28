@@ -114,7 +114,7 @@
   </br></br>
   <p>1. Wykres kołowy </p>- generuje wykres kołowy podzielony na wycinki, obrazujące proporcje. Pełne koło symbolizuje 100%. Wartości dowolne, np. 3, 5, 50. Wymagane minimum dwie wartości.
   </br></br>
-  <p>2. Wykres słupkowy</p> - wykres prezentujący dane za pomocą prostokątów. Domyślnymi etykietami są dni tygodnia, można edytować. Wartości dowolne, np. 3, 5, 50. Wymagane minimum dwie wartości.
+  <p>2. Wykres kolumnowy</p> - wykres prezentujący dane za pomocą prostokątów. Domyślnymi etykietami są dni tygodnia, można edytować. Wartości dowolne, np. 3, 5, 50. Najlepiej wykres odczytuje się przy większej niż 1 liczbie wartości.
   </br></br>
   <p>3. Wykres kołowy procentowy</p> - generuje wykres na podstawie pierścienia, reprezentujący dane wartości procentowe. Wartości dowolne, np. 3, 5, 50 [%]. Maksymalnie cztery wartości.
   </br></br>
@@ -126,7 +126,7 @@
     <path d="M13.1999 16.8003H10.7999V19.2003H13.1999V16.8003Z" fill="#F6F7F9"/>
     <path d="M12 0C5.3726 0 0 5.3726 0 12C0 18.6273 5.3726 23.9999 12 23.9999C18.6273 23.9999 23.9999 18.6273 23.9999 12C23.9999 5.3726 18.6274 0 12 0ZM12 21.828C6.57213 21.828 2.17198 17.4278 2.17198 12C2.17198 6.57213 6.57213 2.17198 12 2.17198C17.4251 2.17856 21.8213 6.57483 21.828 12C21.828 17.4279 17.4279 21.828 12 21.828Z" fill="#F6F7F9"/>
     <path d="M16.668 8.46023C16.0507 5.88212 13.4603 4.29261 10.8822 4.9099C8.71476 5.42886 7.18965 7.37151 7.2 9.60025H9.60002C9.71269 8.27477 10.8785 7.29158 12.204 7.40425C13.5295 7.51692 14.5127 8.68275 14.4 10.0082C14.1549 11.201 13.0849 12.0427 11.868 12.0002C11.2782 12.0002 10.8 12.4784 10.8 13.0682V15.6002H13.2V14.2322C15.738 13.5777 17.2818 11.0084 16.668 8.46023Z" fill="#F6F7F9"/>
-    </svg></div>
+</svg></div>
   Podaj wartości:<input id="textbox" placeholder="1, 2, 3, ..." value="1, 2, 3, 4">
 </div>
 <div id="logo">
@@ -195,7 +195,7 @@
 
 <b id="errors"></b>
   <button id='PieButton'>Wykres kołowy</button>
-  <button id='BarButton'>Wykres słupkowy</button>
+  <button id='BarButton'>Wykres kolumnowy</button>
   <button id='CircleButton'>Wykres kołowy procentowy</button>
   <button id='TimeButton'>Wykres natężenia czasu</button>
 
@@ -220,11 +220,7 @@
   document.getElementById('BarButton').onclick = () => {
     const text = document.querySelector('#textbox').value;
     let numbers = text.split(',').map(x => +x)
-
-    if (numbers.length < 2) {
-      showError('Error: Muszą być wpisane minimum 2 wartości');
-      return
-    }
+    
     if (numbers.some(x => isNaN(x))) {
       showError('Error: Wszystkie wartości muszą być liczbami');
       return

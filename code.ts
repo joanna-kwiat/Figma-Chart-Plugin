@@ -7,30 +7,6 @@ figma.ui.onmessage = async (numbers) => {
   
   await figma.loadFontAsync({ family: "Roboto", style: "Regular" })
 
-//funkcja potrzebna do zmiany kolorów elementów
-  function clone(val) {
-    const type = typeof val
-    if (val === null) {
-      return null
-    } else if (type === 'undefined' || type === 'number' ||
-              type === 'string' || type === 'boolean') {
-      return val
-    } else if (type === 'object') {
-      if (val instanceof Array) {
-        return val.map(x => clone(x))
-      } else if (val instanceof Uint8Array) {
-        return new Uint8Array(val)
-      } else {
-        let o = {}
-        for (const key in val) {
-          o[key] = clone(val[key])
-        }
-        return o
-      }
-    }
-    throw 'unknown'
-  }
-
 //////////////////////////////////////////////////////////////////
 //PIE CHART
 //////////////////////////////////////////////////////////////////
@@ -46,6 +22,8 @@ figma.ui.onmessage = async (numbers) => {
     let numbers2 = (numbers.numbers).map(x => Math.max(0, x)) //redukuje liczby ujemne
     const total = numbers2.reduce((a, b) => a + b, 0)//sumuje elementy w tablicy
     let start = 0;
+    numbers2.sort();
+    numbers2.reverse();
 
     //tworzenie elementów grafu kołowego
     for (const num of numbers2) {
@@ -68,11 +46,7 @@ figma.ui.onmessage = async (numbers) => {
     const ellipse_ColorBurn = figma.createEllipse()
     frame.appendChild(ellipse_ColorBurn)
     ellipse_ColorBurn.resizeWithoutConstraints(width, height)
-    const fills = clone(ellipse_ColorBurn.fills)
-    fills[0].color.r = 0.28
-    fills[0].color.g = 0.30
-    fills[0].color.b = 0.82
-    ellipse_ColorBurn.fills = fills
+    ellipse_ColorBurn.fills = [{ type: 'SOLID', color: {r: 0.28, g: 0.30, b: 0.82} }]
     ellipse_ColorBurn.x = widthPlus;
     ellipse_ColorBurn.constraints = {horizontal: 'SCALE', vertical: 'SCALE'}
     ellipse_ColorBurn.blendMode = "OVERLAY"
@@ -94,11 +68,7 @@ figma.ui.onmessage = async (numbers) => {
       const ellipse_ColorBurn2 = figma.createEllipse()
       frame.appendChild(ellipse_ColorBurn2)
       ellipse_ColorBurn2.resizeWithoutConstraints(15, 15)
-      const fills = clone(ellipse_ColorBurn2.fills)
-      fills[0].color.r = 0.28
-      fills[0].color.g = 0.30
-      fills[0].color.b = 0.82
-      ellipse_ColorBurn2.fills = fills
+      ellipse_ColorBurn2.fills = [{ type: 'SOLID', color: {r: 0.28, g: 0.30, b: 0.82} }]
       ellipse_ColorBurn2.x = widthPlus/2
       ellipse_ColorBurn2.y = posY-15
       ellipse_ColorBurn2.constraints = {horizontal: 'MIN', vertical: 'MAX'}
@@ -145,6 +115,7 @@ figma.ui.onmessage = async (numbers) => {
 
     for (let i = 0; i < numbers2.length; i++) {
       const num = numbers2[i];
+      const widthColumn = 25*(7/numbers2.length)
       const left = chartX + chartWidth * (i + 0.25) / numbers2.length;
       const right = chartX + chartWidth * (i + 0.75) / numbers2.length;
       const top = chartY + chartHeight - chartHeight * (Math.max(0, num) - min) / (max - min);
@@ -155,8 +126,8 @@ figma.ui.onmessage = async (numbers) => {
       frame.appendChild(column)
       column.x = left
       column.y = top
-      column.resizeWithoutConstraints(25, bottom - top)
-      column.fills = [{ type: 'SOLID', color: {r: 0.28, g: 0.3, b: 0.83} }]
+      column.resizeWithoutConstraints(widthColumn, bottom - top)
+      column.fills = [{ type: 'SOLID', color: {r: 0.28, g: 0.3, b: 0.83}}]
       column.opacity = 0.4
       column.constraints = {horizontal: 'SCALE', vertical: 'SCALE'}
 
@@ -166,9 +137,9 @@ figma.ui.onmessage = async (numbers) => {
       frame.appendChild(label)
       label.x = left
       label.y = height - 15 
-      label.resizeWithoutConstraints(25, 15)
+      label.resizeWithoutConstraints(widthColumn, 15)
       label.fills = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0} }]
-      label.characters = weekDay[i]
+      label.characters = weekDay[i%7]
       label.fontSize = 12
       label.textAlignHorizontal = 'CENTER'
       label.textAlignVertical = 'BOTTOM'
@@ -179,7 +150,7 @@ figma.ui.onmessage = async (numbers) => {
       frame.appendChild(labelUp)
       labelUp.x = left
       labelUp.y = top - 15
-      labelUp.resizeWithoutConstraints(25, 15)
+      labelUp.resizeWithoutConstraints(widthColumn, 15)
       labelUp.fills = [{ type: 'SOLID', color: {r: 0.6, g: 0.6, b: 0.6} }]
       labelUp.characters = num.toString()
       labelUp.fontSize = 12
@@ -226,6 +197,8 @@ figma.ui.onmessage = async (numbers) => {
 
     let numbers3 = (numbers.numbers).map(x => Math.max(0, x))//redukuje liczby ujemne, przerabia na procenty
     let numbers2 = numbers3.map(x => +x/100) 
+    numbers2.sort();
+    numbers2.reverse();
     const total = numbers2.reduce((a, b) => a + b, 0)//sumuje elementy w tablicy
     const supp = 1 - total
     let start = 0
@@ -254,8 +227,9 @@ figma.ui.onmessage = async (numbers) => {
       start += num
       itt += 1
     }
-    let numbers4 = numbers3.toString()
+    let numbers4 = (numbers2).toString()
     numbers4 = numbers4.replace(/,/gi, "%\n")
+    numbers4 = numbers4.replace(/0.0|0./gi, "")
     numbers4 = numbers4 + "%"
 
       const label = figma.createText()
@@ -337,7 +311,6 @@ figma.ui.onmessage = async (numbers) => {
       label.y = height + 7
     }
     
-
     figma.closePlugin()
   }
  
